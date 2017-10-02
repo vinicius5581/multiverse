@@ -1,22 +1,30 @@
 const _ = require('lodash');
-const os = require('os');
 const yargs = require('yargs');
 
+const users = require('./users');
+const universes = require('./universes');
 
-var user = os.userInfo().username;
-console.log(`Hello ${user}!`);
 
 var argv = yargs.argv;
 var command = argv._[0];
 
+
 if (command === 'add') {
-  console.log('Adding a new universe');
+  var universe = universes.addUniverse(argv.name, argv.size);
+  if (universe) {
+    console.log('Universe created');
+    console.log('--');
+    console.log(`Name: ${universe.name}`);
+    console.log(`Size: ${universe.size}`);
+  } else {
+    console.log(`This universe already exists`);
+  }
 } else if (command === 'list') {
-  console.log('Listing all universes');
+  universes.getAllUniverses();
 } else if (command === 'get') {
-  console.log('Getting an universe');
+  universes.getUniverse(argv.name);
 } else if (command === 'remove') {
-  console.log('Removing an universe');
+  universes.removeUniverse(argv.name)
 } else {
   console.log('Command not reconized')
 }
