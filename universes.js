@@ -1,9 +1,6 @@
 const fs = require('fs');
 
-
-console.log('Universes');
-
-var fetchUniverses = () => {
+var fetchMultiverse = () => {
   try {
     var multiverseString = fs.readFileSync('multiverse-data.json');
     return JSON.parse(multiverseString);
@@ -16,14 +13,12 @@ var saveMultiverse = (multiverse) => {
   fs.writeFileSync('multiverse-data.json', JSON.stringify(multiverse));
 }
 
-const addUniverse = (name, size) => {
-  console.log("New universe: ", name, size);
-  var multiverse = fetchUniverses();
+var addUniverse = (name, size) => {
+  var multiverse = fetchMultiverse();
   var universe = {
     name,
     size
   };
-
   var duplicateUniverses = multiverse.filter(universe => universe.name === name);
 
   if (duplicateUniverses.length === 0) {
@@ -33,19 +28,34 @@ const addUniverse = (name, size) => {
   }
 };
 
-const getAllUniverses = () => {
-  console.log('Get all universes');
+var getAllUniverses = () => {
+  return fetchMultiverse();
 }
-const getUniverse = (name) => {
-  console.log('Get universe', name);
+
+var getUniverse = (name) => {
+  var multiverse = fetchMultiverse();
+  var filteredUniverses = multiverse.filter(universe => universe.name === name);
+  return filteredUniverses[0];
 }
-const removeUniverse = (name) => {
-  console.log('Remove universe', name);
+
+var removeUniverse = (name) => {
+  var multiverse = fetchMultiverse();
+  var filteredUniverses = multiverse.filter(universe => universe.name !== name);
+  saveMultiverse(filteredUniverses);
+  return multiverse.length !== filteredUniverses.length;
 }
+
+var logUniverse = (universe) => {
+  debugger;
+  console.log('--');
+  console.log(`Name: ${universe.name}`);
+  console.log(`Size: ${universe.size}`);
+};
 
 module.exports = {
   addUniverse,
   getAllUniverses,
   getUniverse,
-  removeUniverse
+  removeUniverse,
+  logUniverse
 }
