@@ -4,7 +4,33 @@ const yargs = require('yargs');
 const users = require('./users');
 const universes = require('./universes');
 
-const argv = yargs.argv;
+const nameOptions = {
+  describe: 'Name of the universe',
+  demand: 'true',
+  alias: 'n'
+};
+
+const sizeOptions = {
+  describe: 'Name of the universe',
+  demand: 'true',
+  alias: 's'
+};
+
+const argv = yargs
+  .command('add', 'Add a new universe', {
+    name: nameOptions,
+    size: sizeOptions
+  })
+  .command('list', 'List all universes')
+  .command('get', 'Get an universe', {
+    name: nameOptions
+  })
+  .command('remove', 'Remove an universe', {
+    name: nameOptions
+  })
+  .help()
+  .argv;
+
 var command = argv._[0];
 
 if (command === 'add') {
@@ -30,6 +56,7 @@ if (command === 'add') {
 } else if (command === 'remove') {
   var universeRemoved = universes.removeUniverse(argv.name);
   var message = universeRemoved ? 'Universe was removed' : 'Universe not found';
+  console.log(message);
 } else {
   console.log('Command not reconized');
 }
